@@ -1,0 +1,42 @@
+body {
+    margin: 0;
+    background-color: #121212;
+    color:#e3e3e3;
+    font-family: 'Rubik', sans-serif;
+    font-size: 34px;
+    font-weight: 500;
+}
+
+table {
+    width: 1200px;
+    height: 1200px;
+    border-collapse: collapse;
+    margin: auto;
+    margin-top: 20px;
+}
+
+td {
+    background-color: rgb(18, 18, 18);
+    cursor: pointer;
+    border: 1px solid #363636;
+}
+
+.button {
+    text-align: center;
+    width: 200px;
+    height: 75px;
+    font-family: inherit;
+    font-size: inherit;
+    color: #1e1e1e;
+    font-weight: inherit;
+    background-color: #b995f9;
+    margin-top: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
+    border-radius: 7px;
+    -webkit-border-radius: 7px;
+    -moz-border-radius: 7px;
+    -ms-border-radius: 7px;
+    -o-border-radius: 7px;
+    cursor: pointer;
+}
