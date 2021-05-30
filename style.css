@@ -21,7 +21,12 @@ td {
     border: 1px solid #363636;
 }
 
-.button {
+@keyframes buttonHover {
+    from {opacity: 100%;}
+    to {opacity: 50%;}
+}
+
+.button, .buttonDisabled {
     text-align: center;
     width: 200px;
     height: 75px;
@@ -30,6 +35,8 @@ td {
     color: #1e1e1e;
     font-weight: inherit;
     background-color: #b995f9;
+    cursor: pointer;
+    border: none;
     margin-top: 20px;
     margin-left: 10px;
     margin-right: 10px;
@@ -38,5 +45,18 @@ td {
     -moz-border-radius: 7px;
     -ms-border-radius: 7px;
     -o-border-radius: 7px;
-    cursor: pointer;
+}
+
+.button:hover {
+    animation-name: buttonHover;
+    -webkit-animation-name: buttonHover;
+
+    animation-duration: 0.5s;
+    -webkit-animation-duration: 0.5s;
+
+    animation-timing-function: ease;
+    -webkit-animation-timing-function: ease;
+
+     animation-fill-mode: forwards;
+    -webkit-animation-fill-mode: forwards;
 }

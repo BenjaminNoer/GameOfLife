@@ -1,11 +1,22 @@
-var table;
+//cell states
 var field = [];
+
+//update
 var intervalId;
+
+//pause
 var active = false;
+
+//elements
+var table, btnStart, btnPause, btnReset;
 
 function Onload()
 {
-    document.getElementById("btnStop").disabled = true;
+    btnStart = document.getElementById("btnStart");
+    btnPause = document.getElementById("btnPause");
+    btnReset = document.getElementById("btnReset");
+
+    ToggleButtons(btnStart, btnPause);
 
     table = document.getElementById("table");
     table.innerHTML = "";
@@ -52,8 +63,7 @@ function ToggleCell(cell)
 
 function Start()
 {
-    document.getElementById("btnStop").disabled = false;
-    document.getElementById("btnStart").disabled = true;
+    ToggleButtons(btnPause, btnStart);
 
     active = true;
 
@@ -63,19 +73,32 @@ function Start()
       }, 100);
 }
 
-function Stop()
+function Pause()
 {
-    document.getElementById("btnStop").disabled = true;
-    document.getElementById("btnStart").disabled = false;
+    ToggleButtons(btnStart, btnPause);
 
     active = false;
 
     clearInterval(intervalId);
 }
 
-function Clear()
+function ToggleButtons (button1, button2)
 {
-    Stop();
+    button1.disabled = false;
+    button2.disabled = true;
+
+    button2.classList.add("buttonDisabled");
+    button2.classList.remove("button");
+    button2.style.opacity = "50%";
+
+    button1.classList.add("button");
+    button1.classList.remove("buttonDisabled");
+    button1.style.opacity = "100%";
+}
+
+function Reset()
+{
+    Pause();
     Onload();
 }
 
