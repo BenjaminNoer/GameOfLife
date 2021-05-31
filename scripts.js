@@ -1,14 +1,17 @@
 //cell states
 var field = [];
 
-//update
-var intervalId;
+//update and interval
+var intervalId, interval = 100;;
 
 //pause
 var active = false;
 
 //elements
 var table, btnStart, btnPause, btnReset;
+
+//table size
+var max = 64;
 
 function Onload()
 {
@@ -25,13 +28,13 @@ function Onload()
     var innerHTML = "";
 
     //row
-    for (var i = 0; i < 64; i++)
+    for (var i = 0; i < max; i++)
     {
         var row = [];
         innerHTML += "<tr>";
 
         //cell
-        for (var j = 0; j < 64; j++)
+        for (var j = 0; j < max; j++)
         {
             innerHTML += "<td onclick='ToggleCell(this)' style='background-color: rgb(18, 18, 18);'></td>";
             row.push("Dead");
@@ -64,25 +67,27 @@ function ToggleCell(cell)
 function Start()
 {
     ToggleButtons(btnPause, btnStart);
+    ToggleCellCursor(false);
 
     active = true;
 
-    //call update every 50ms
+    //call update
     intervalId = window.setInterval(function(){
         UpdateField();
-      }, 100);
+      }, interval);
 }
 
 function Pause()
 {
     ToggleButtons(btnStart, btnPause);
+    ToggleCellCursor(true);
 
     active = false;
 
     clearInterval(intervalId);
 }
 
-function ToggleButtons (button1, button2)
+function ToggleButtons(button1, button2)
 {
     button1.disabled = false;
     button2.disabled = true;
@@ -96,6 +101,27 @@ function ToggleButtons (button1, button2)
     button1.style.opacity = "100%";
 }
 
+function ToggleCellCursor(isPointer)
+{
+    var value = "";
+
+    if (isPointer)
+    {
+        value = "pointer";
+    }
+    else
+    {
+        value = "default";
+    }
+
+    var cells = document.getElementsByTagName("td");
+
+    for (var i = 0; i < cells.length; i++)
+    {
+        cells[i].style.cursor = value;
+    }
+}
+
 function Reset()
 {
     Pause();
@@ -105,10 +131,10 @@ function Reset()
 function UpdateField()
 {
     //row
-    for (var i = 0; i < 64; i++)
+    for (var i = 0; i < max; i++)
     {
         //cell
-        for (var j = 0; j < 64; j++)
+        for (var j = 0; j < max; j++)
         {
             var neighbours = 0;
             
@@ -117,11 +143,19 @@ function UpdateField()
             {
                 neighbours += CheckNeighbours(i - 1, j);
             }
+            else
+            {
+                neighbours += CheckNeighbours(max - 1, j);
+            }
 
             //check down
-            if (i != 63)
+            if (i != max - 1)
             {
                 neighbours += CheckNeighbours(i + 1, j);
+            }
+            else
+            {
+                neighbours += CheckNeighbours(0, j);
             }
 
             //check left
@@ -129,11 +163,19 @@ function UpdateField()
             {
                 neighbours += CheckNeighbours(i, j - 1);
             }
+            else
+            {
+                neighbours += CheckNeighbours(i, max - 1);
+            }
 
             //check right
-            if (j != 63)
+            if (j != max - 1)
             {
                 neighbours += CheckNeighbours(i, j + 1);
+            }
+            else
+            {
+                neighbours += CheckNeighbours(i, 0);
             }
 
             //check up-left
@@ -141,25 +183,74 @@ function UpdateField()
             {
                 neighbours += CheckNeighbours(i - 1, j - 1);
             }
+            else if (i != 0 && j == 0)
+            {
+                neighbours += CheckNeighbours(i - 1, max - 1);
+            }
+            else if (i == 0 && j != 0)
+            {
+                neighbours += CheckNeighbours(max - 1, j);
+            }
+            else
+            {
+                neighbours += CheckNeighbours(max - 1, max - 1);
+            }
 
             //check up-right
-            if (i != 0 && j != 63)
+            if (i != 0 && j != max - 1)
             {
                 neighbours += CheckNeighbours(i - 1, j + 1);
             }
+            else if (i == 0 && j != max - 1)
+            {
+                neighbours += CheckNeighbours(max - 1, j + 1);
+            }
+            else if (i != 0 && j == max - 1)
+            {
+                neighbours += CheckNeighbours(i - 1, 0);
+            }
+            else
+            {
+                neighbours += CheckNeighbours(max - 1, 0);
+            }
 
             //check down-left
-            if (i != 63 && j != 0)
+            if (i != max - 1 && j != 0)
             {
                 neighbours += CheckNeighbours(i + 1, j - 1);
             }
+            else if (i == max - 1 && j != 0)
+            {
+                neighbours += CheckNeighbours(0, j - 1);
+            }
+            else if (i != max - 1 && j == 0)
+            {
+                neighbours += CheckNeighbours(i + 1, max - 1);
+            }
+            else
+            {
+                neighbours += CheckNeighbours(0, max - 1);
+            }
 
             //check down-right
-            if (i != 63 && j != 63)
+            if (i != max - 1 && j != max - 1)
             {
                 neighbours += CheckNeighbours(i + 1, j + 1);
             }
+            else if (i == max - 1 && j != max - 1)
+            {
+                neighbours += CheckNeighbours(0, j + 1);
+            }
+            else if (i != max - 1 && j == max - 1)
+            {
+                neighbours += CheckNeighbours(i + 1, 0);
+            }
+            else
+            {
+                neighbours += CheckNeighbours(0, 0);
+            }
 
+            //apply new states
             if (field[i][j] == "Dead" && neighbours == 3)
             {
                 field[i][j] = "Alive"
@@ -172,9 +263,9 @@ function UpdateField()
     }
 
     //Apply update
-    for (var i = 0; i < 63; i++)
+    for (var i = 0; i < max; i++)
     {
-        for (var j = 0; j < 63; j++)
+        for (var j = 0; j < max; j++)
         {
             if (field[i][j] == "Alive")
             {
