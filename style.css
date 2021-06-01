@@ -26,7 +26,8 @@ td {
     to {opacity: 50%;}
 }
 
-.button, .buttonDisabled {
+.button, .buttonDisabled, .numericInput {
+    display: inline-block;
     text-align: center;
     width: 200px;
     height: 75px;
@@ -60,3 +61,23 @@ td {
      animation-fill-mode: forwards;
     -webkit-animation-fill-mode: forwards;
 }
+
+.numericInput {
+    padding-left: 75px;
+    width: 125px;
+    margin-left: -75px;
+}
+
+.numericInput:focus {
+    outline: none;
+}
+
+label {
+    position: relative;
+    left: 40px;
+    color: #1e1e1e;
+}
+
+input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+  }

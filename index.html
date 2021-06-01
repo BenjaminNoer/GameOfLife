@@ -4,13 +4,17 @@
 		<link rel="stylesheet" href="style.css">
         <script src="scripts.js"></script>
 	</head>
-	<body onload="Onload()">
+	<body onload="Onload()" onresize="ResizeTable()">
         <table class="table" id="table">
             <tr>
                 <td onclick="ToggleCell(this)"></td>
             </tr>
         </table>
-        <center>
+        <center id="buttons">
+            <div style="display: inline-block;">
+                <label for="numericInput">Size:</label>
+                <input class="numericInput" id="numericInput" type="number" value="32" onchange="ChangeSize()" min="16" max="128">
+            </div>
             <button id="btnStart" class="button" onclick="Start()">Start</button>
             <button id="btnPause" class="button" onclick="Pause()">Pause</button>
             <button id="btnReset" class="button" onclick="Reset()">Reset</button>

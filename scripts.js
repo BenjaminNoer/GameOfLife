@@ -11,10 +11,12 @@ var active = false;
 var table, btnStart, btnPause, btnReset;
 
 //table size
-var max = 64;
+var max = 32;
 
 function Onload()
 {
+    clearInterval(intervalId);
+    active = false;
     btnStart = document.getElementById("btnStart");
     btnPause = document.getElementById("btnPause");
     btnReset = document.getElementById("btnReset");
@@ -32,8 +34,6 @@ function Onload()
     {
         var row = [];
         innerHTML += "<tr>";
-
-        //cell
         for (var j = 0; j < max; j++)
         {
             innerHTML += "<td onclick='ToggleCell(this)' style='background-color: rgb(18, 18, 18);'></td>";
@@ -43,6 +43,46 @@ function Onload()
         field.push(row);
     }
     table.innerHTML = innerHTML;
+
+    ResizeTable();
+}
+
+function ResizeTable()
+{
+    var size = 0;
+
+    if (window.innerHeight <= window.innerWidth)
+    {
+        size = window.innerHeight;
+    }
+    else
+    {
+        size = window.innerWidth;
+    }
+
+    var height = document.getElementById("buttons").scrollHeight + 50;
+    table.style.width = (size - height) + "px";
+    table.style.height = (size - height) + "px";
+}
+
+function ChangeSize()
+{
+    var input = document.getElementById("numericInput").value;
+
+    if (!(input > 128) && !(input < 16))
+    {
+        max = input;
+    }
+    else if (input > 128)
+    {
+        document.getElementById("numericInput").value = 128;
+    }
+    else
+    {
+        document.getElementById("numericInput").value = 16;
+    }
+
+    Onload();
 }
 
 function ToggleCell(cell)
@@ -138,6 +178,7 @@ function UpdateField()
         {
             var neighbours = 0;
             
+            //normal checks
             //check up
             if (i != 0)
             {
@@ -178,18 +219,19 @@ function UpdateField()
                 neighbours += CheckNeighbours(i, 0);
             }
 
+            //diagonal checks
             //check up-left
             if (i != 0 && j != 0)
             {
                 neighbours += CheckNeighbours(i - 1, j - 1);
             }
+            else if (i == 0 && j != 0)
+            {
+                neighbours += CheckNeighbours(max - 1, j - 1);
+            }
             else if (i != 0 && j == 0)
             {
                 neighbours += CheckNeighbours(i - 1, max - 1);
-            }
-            else if (i == 0 && j != 0)
-            {
-                neighbours += CheckNeighbours(max - 1, j);
             }
             else
             {
@@ -263,6 +305,8 @@ function UpdateField()
     }
 
     //Apply update
+    var anyAlive = false;
+
     for (var i = 0; i < max; i++)
     {
         for (var j = 0; j < max; j++)
@@ -270,12 +314,18 @@ function UpdateField()
             if (field[i][j] == "Alive")
             {
                 table.rows[i].cells[j].style.backgroundColor = "rgb(227, 227, 227)";
+                anyAlive = true;
             }
             else
             {
                 table.rows[i].cells[j].style.backgroundColor = "rgb(18, 18, 18)";
             }
         }
+    }
+
+    if (!anyAlive)
+    {
+        Reset();
     }
 }
 
